@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+  client:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./webpack.config.js:/usr/src/app/webpack.config.js
+      - ./.babelrc:/usr/src/app/.babelrc
+      - ./server.js:/usr/src/app/server.js
+      - ./dist:/usr/src/app/dist
+    ports:
+      - 8080:8080
