@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./src:/usr/src/app/src
-      - ./webpack.config.js:/usr/src/app/webpack.config.js
-      - ./.babelrc:/usr/src/app/.babelrc
-      - ./server.js:/usr/src/app/server.js
-      - ./dist:/usr/src/app/dist
+      - ./public:/usr/src/app/public
+      - ./gitignore:/usr/src/app/gitignore
+      - ./package.json:/usr/src/app/package.json
+      - ./README.md:/usr/src/app/README.md
     ports:
-      - 8080:8080
+      - 3000:3000

@@ -3,6 +3,8 @@ MAINTAINER ANT_Solutions "particle4dev@gmail.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN npm install -g create-react-app
+
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies:
 ADD package.json /tmp/package.json
@@ -16,6 +18,6 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app/
 RUN cp -a /tmp/node_modules /usr/src/app/
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["npm", "start"]

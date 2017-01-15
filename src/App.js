@@ -1,9 +1,11 @@
-import React, { Component } from "react";
-import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from "react-mapbox-gl";
+import React, { Component } from 'react';
+import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
+import { parseString } from 'xml2js';
+import { Map } from 'immutable';
 import styles from './london-cycle.style';
-import { parseString } from "xml2js";
-import { Map } from "immutable";
-import config from "./config.json";
+import logo from './logo.svg';
+import './App.css';
+import config from './config.json';
 
 const { accessToken, style } = config;
 
@@ -28,8 +30,8 @@ const maxBounds = [
   [0.23441119994140536,51.654967740310525], // North East
 ];
 
-export default class LondonCycle extends Component {
-
+class App extends Component {
+  
   state = {
     center: [-0.109970527, 51.52916347],
     zoom: [11],
@@ -101,12 +103,16 @@ export default class LondonCycle extends Component {
     this.toggle = !this.toggle;
   };
 
+
   render() {
     const { stations, station, skip, end, popupShowLabel, fitBounds } = this.state;
 
+
     return (
-      <div>
+      <div className="App">
+       
         <ReactMapboxGl
+          className="App-intro"
           style={style}
           fitBounds={fitBounds}
           center={this.state.center}
@@ -128,14 +134,14 @@ export default class LondonCycle extends Component {
             layout={{ "icon-image": "marker-15" }}>
             {
               stations
-                .map((station, index) => (
-                  <Feature
-                    key={station.get("id")}
-                    onHover={this._onToggleHover.bind(this, "pointer")}
-                    onEndHover={this._onToggleHover.bind(this, "")}
-                    onClick={this._markerClick.bind(this, station)}
-                    coordinates={station.get("position")}/>
-                )).toArray()
+              .map((station, index) => (
+                <Feature
+                  key={station.get("id")}
+                  onHover={this._onToggleHover.bind(this, "pointer")}
+                  onEndHover={this._onToggleHover.bind(this, "")}
+                  onClick={this._markerClick.bind(this, station)}
+                  coordinates={station.get("position")}/>
+              )).toArray()
             }
           </Layer>
 
@@ -175,7 +181,10 @@ export default class LondonCycle extends Component {
       }}>
           <button style={styles.btn} onClick={this._onFitBoundsClick}>Fit to bounds</button>
         </div>
+
       </div>
-    )
+    );
   }
 }
+
+export default App;
