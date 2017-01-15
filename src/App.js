@@ -110,9 +110,7 @@ class App extends Component {
 
     return (
       <div className="App">
-       
         <ReactMapboxGl
-          className="App-intro"
           style={style}
           fitBounds={fitBounds}
           center={this.state.center}
