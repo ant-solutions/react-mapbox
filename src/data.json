@@ -1,0 +1,18 @@
+{
+	"data": [
+    {
+      "id": "1",
+      "name": "River Street , Clerkenwell",
+      "position": [-0.109970527, 51.52916347],
+      "bikes": 6,
+      "slots": 19
+    },
+    {
+      "id": "2",
+      "name": "Phillimore Gardens, Kensington",
+      "position": [-0.197574246, 51.49960695],
+      "bikes": 23,
+      "slots": 37
+    }
+  ]
+}

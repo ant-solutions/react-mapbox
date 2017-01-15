@@ -1,29 +1,14 @@
 import React, { Component } from 'react';
 import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
 import { parseString } from 'xml2js';
-import { Map } from 'immutable';
+import { List, Map, fromJS } from 'immutable';
 import styles from './london-cycle.style';
 import logo from './logo.svg';
 import './App.css';
 import config from './config.json';
+import { data } from './data.json';
 
 const { accessToken, style } = config;
-
-function getCycleStations() {
-  return fetch("https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml")
-    .then(res => res.text())
-    .then(data => {
-      return new Promise((resolve, reject) => {
-        parseString(data, (err, res) => {
-          if(!err) {
-            resolve(res.stations.station);
-          } else {
-            reject(err);
-          }
-        });
-      });
-    })
-}
 
 const maxBounds = [
   [-0.481747846041145,51.3233379650232], // South West
@@ -36,23 +21,14 @@ class App extends Component {
     center: [-0.109970527, 51.52916347],
     zoom: [11],
     skip: 0,
-    stations: new Map(),
+    stations: new List(),
     popupShowLabel: true
   };
 
   componentWillMount() {
-    getCycleStations().then(res => {
-      this.setState(({ stations }) => ({
-        stations: stations.merge(res.reduce((acc, station) => {
-          return acc.set(station.id[0], new Map({
-            id: station.id[0],
-            name: station.name[0],
-            position: [ parseFloat(station.long[0]), parseFloat(station.lat[0]) ],
-            bikes: parseInt(station.nbBikes[0]),
-            slots: parseInt(station.nbDocks[0])
-          }))
-        }, new Map()))
-      }));
+    const stations = data.map((e) => new Map(e));
+    this.setState({
+      stations: new List(stations)
     });
   };
 
@@ -88,7 +64,6 @@ class App extends Component {
   toggle = true;
 
   _onFitBoundsClick = () => {
-    const { stations } = this.state;
 
     if (this.toggle) {
       this.setState({
@@ -106,8 +81,9 @@ class App extends Component {
 
   render() {
     const { stations, station, skip, end, popupShowLabel, fitBounds } = this.state;
-
-
+    stations.map((station, index) => {
+      console.log(station.get("id"), station.get("position"), index);
+    });
     return (
       <div className="App">
         <ReactMapboxGl
