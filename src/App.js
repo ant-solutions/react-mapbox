@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import ReactMapboxGl, { Layer, Feature, Marker, Popup, ZoomControl } from 'react-mapbox-gl';
-import { parseString } from 'xml2js';
-import { List, Map, fromJS } from 'immutable';
-import logo from './logo.svg';
 import './App.css';
 import config from './config.json';
 import { data } from './data.json';
