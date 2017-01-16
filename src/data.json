@@ -2,17 +2,17 @@
 	"data": [
     {
       "id": "1",
-      "name": "River Street , Clerkenwell",
+      "title": "River Street , Clerkenwell",
       "position": [-0.109970527, 51.52916347],
-      "bikes": 6,
-      "slots": 19
+      "image_thumb": "https://static.inaturalist.org/photos/5470313/square.jpg",
+      "image_large": "https://static.inaturalist.org/photos/5853751/medium.jpeg"
     },
     {
       "id": "2",
-      "name": "Phillimore Gardens, Kensington",
-      "position": [-0.197574246, 51.49960695],
-      "bikes": 23,
-      "slots": 37
+      "title": "Phillimore Gardens, Kensington",
+      "position": [-113.690599, 36.2155313],
+      "image_thumb": "https://static.inaturalist.org/photos/5514142/square.jpg",
+      "image_large": "https://static.inaturalist.org/photos/5514142/medium.jpg"
     }
   ]
 }

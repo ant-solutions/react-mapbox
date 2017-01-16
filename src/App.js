@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
+import ReactMapboxGl, { Layer, Feature, Marker, Popup, ZoomControl } from 'react-mapbox-gl';
 import { parseString } from 'xml2js';
 import { List, Map, fromJS } from 'immutable';
 import styles from './london-cycle.style';
@@ -10,19 +10,12 @@ import { data } from './data.json';
 
 const { accessToken, style } = config;
 
-const maxBounds = [
-  [-0.481747846041145,51.3233379650232], // South West
-  [0.23441119994140536,51.654967740310525], // North East
-];
-
 class App extends Component {
-  
   state = {
-    center: [-0.109970527, 51.52916347],
-    zoom: [11],
+    center: [-13.8248762, 37.3811294],
+    zoom: [1],
     skip: 0,
     stations: new List(),
-    popupShowLabel: true
   };
 
   componentWillMount() {
@@ -34,8 +27,8 @@ class App extends Component {
 
   _markerClick = (station, { feature }) => {
     this.setState({
-      center: feature.geometry.coordinates,
-      zoom: [14],
+      center: station.get("position"),
+      zoom: [1],
       station
     });
   };
@@ -57,43 +50,37 @@ class App extends Component {
     this.setState({ zoom: [zoom] });
   };
 
-  _popupChange(popupShowLabel) {
-    this.setState({ popupShowLabel });
-  }
-
-  toggle = true;
-
-  _onFitBoundsClick = () => {
-
-    if (this.toggle) {
+  _handleClosePopup = () => {
+    if (this.state.station) {
       this.setState({
-        fitBounds: [[-0.122555629777, 51.4734862092], [-0.114842, 51.50621]]
-      });
-    } else {
-      this.setState({
-        fitBounds: [[32.958984, -5.353521], [43.50585, 5.615985]] // this won't focus on the area as there is a maxBounds
+        station: null
       });
     }
-
-    this.toggle = !this.toggle;
-  };
-
+  }
 
   render() {
-    const { stations, station, skip, end, popupShowLabel, fitBounds } = this.state;
+    const { stations, station, skip, end, fitBounds } = this.state;
     stations.map((station, index) => {
       console.log(station.get("id"), station.get("position"), index);
     });
+
+    const markerCoord = [
+      -0.2416815,
+      51.5285582
+    ];
+
+    const markerContainer = document.createElement('div');
+    markerContainer.style.width = "400px";
+    markerContainer.style.position = "absolute";
+
+    const markerList = [1, 2];
+
     return (
       <div className="App">
         <ReactMapboxGl
           style={style}
-          fitBounds={fitBounds}
-          center={this.state.center}
+          // center={this.state.center}
           zoom={this.state.zoom}
-          minZoom={8}
-          maxZoom={15}
-          maxBounds={maxBounds}
           accessToken={accessToken}
           onDrag={this._onDrag}
           containerStyle={styles.container}>
@@ -101,61 +88,36 @@ class App extends Component {
           <ZoomControl
             zoomDiff={1}
             onControlClick={this._onControlClick}/>
-
-          <Layer
-            type="symbol"
-            id="marker"
-            layout={{ "icon-image": "marker-15" }}>
-            {
-              stations
-              .map((station, index) => (
-                <Feature
-                  key={station.get("id")}
-                  onHover={this._onToggleHover.bind(this, "pointer")}
-                  onEndHover={this._onToggleHover.bind(this, "")}
-                  onClick={this._markerClick.bind(this, station)}
-                  coordinates={station.get("position")}/>
-              )).toArray()
-            }
-          </Layer>
-
+          { stations && stations.map((station, index) => {
+            return <Marker
+            key={station.get("id")}
+            anchor="top"
+            coordinates={station.get("position")}
+            onHover={this._onToggleHover.bind(this, "pointer")}
+            onEndHover={this._onToggleHover.bind(this, "")}
+            onClick={this._markerClick.bind(this, station)}
+            >
+              <h1><img src={station.get("image_thumb")} /></h1>
+          </Marker>})
+          }
           {
             station && (
               <Popup
                 key={station.get("id")}
-                coordinates={station.get("position")}>
+                coordinates={station.get("position")}
+                style={styles.popup}>
                 <div>
-                  <span style={{
-                    ...styles.popup,
-                    display: popupShowLabel ? "block" : "none"
-                  }}>
-                    {station.get("name")}
-                  </span>
-                  <div onClick={this._popupChange.bind(this, !popupShowLabel)}>
-                    {
-                      popupShowLabel ? "Hide" : "Show"
-                    }
+                  <button style={styles.popupCloseButton} onClick={this._handleClosePopup}>&times;</button>
+                  <img src={station.get("image_large")} style={{ maxWidth: '100%'}} />
+                  <div>
+                    <button>I want to do it</button>
+                    <button>I have done it</button>
                   </div>
                 </div>
               </Popup>
             )
           }
         </ReactMapboxGl>
-        {
-          station && (
-            <div style={styles.stationDescription}>
-              <p>{ station.get("name") }</p>
-              <p>{ station.get("bikes") } bikes / { station.get("slots") } slots</p>
-            </div>
-          )
-        }
-        <div style={{
-        ...styles.btnWrapper,
-        ...(station && styles.btnStationOpen)
-      }}>
-          <button style={styles.btn} onClick={this._onFitBoundsClick}>Fit to bounds</button>
-        </div>
-
       </div>
     );
   }
