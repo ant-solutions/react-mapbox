@@ -38,17 +38,17 @@ export default class MapBox extends Component {
     });
   }
 
-  _markerClick = (station) => {
+  _markerClick = (moment) => {
     this.setState({
       zoom: [1],
-      station
+      moment
     });
   };
 
   _onDrag = () => {
-    if (this.state.station) {
+    if (this.state.moment) {
       this.setState({
-        station: null
+        moment: null
       });
     }
   };
@@ -63,16 +63,16 @@ export default class MapBox extends Component {
   };
 
   _handleClosePopup = () => {
-    if (this.state.station) {
+    if (this.state.moment) {
       this.setState({
-        station: null
+        moment: null
       });
     }
   }
 
   render() {
     const { accessToken, data, mapStyle, ...rest } = this.props;
-    const { moments, station } = this.state;
+    const { moments, moment } = this.state;
      return (
       <ReactMapboxGl
           style={mapStyle}
@@ -84,25 +84,25 @@ export default class MapBox extends Component {
             zoomDiff={1}
             onControlClick={this._onControlClick}/>
           {
-            moments && moments.map((station, index) => (
+            moments && moments.map((moment, index) => (
               <Marker
-                key={station.get("id")}
+                key={moment.get("id")}
                 anchor="top"
-                coordinates={station.get("position")}
+                coordinates={moment.get("position")}
                 onHover={this._onToggleHover.bind(this, "pointer")}
                 onEndHover={this._onToggleHover.bind(this, "")}
-                onClick={this._markerClick.bind(this, station)}
+                onClick={this._markerClick.bind(this, moment)}
                 >
-                  <img src={station.get("image_thumb")} />
+                  <img src={moment.get("image_thumb")} />
               </Marker>)
             )
           }
           {
-            station && (
+            moment && (
               <MapPopup
-                key={station.get("id")}
-                coordinates={station.get("position")}
-                data={station}
+                key={moment.get("id")}
+                coordinates={moment.get("position")}
+                data={moment}
                 onCloseButtonClick={this._handleClosePopup}
               />
             )
