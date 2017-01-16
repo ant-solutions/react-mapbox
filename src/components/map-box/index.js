@@ -6,8 +6,8 @@ import MapPopup from '../map-popup/';
 
 export default class MapBox extends Component {
   static propTypes = {
-    accessToken: PropTypes.string.required,
-    data: PropTypes.object.required,
+    accessToken: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired,
     mapStyle: PropTypes.string,
   };
 
